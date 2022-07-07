@@ -1,0 +1,39 @@
+{
+  "name": "aus-extension",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {},
+  "description": "",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "webRequest"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://online.immi.gov.au/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "jquery.js",
+        "inject.js"
+      ],
+      "matches": [
+        "https://online.immi.gov.au/*"
+      ],
+      "use_dynamic_url": true
+    }
+  ]
+}

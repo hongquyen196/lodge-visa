@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/aus-extension.iml" filepath="$PROJECT_DIR$/aus-extension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lodge-visa.iml" filepath="$PROJECT_DIR$/lodge-visa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nz-extension.iml" filepath="$PROJECT_DIR$/nz-extension.iml" />
+    </modules>
+  </component>
+</project>

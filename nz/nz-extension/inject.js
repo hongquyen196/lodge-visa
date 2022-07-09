@@ -47,8 +47,6 @@ const data = {
 }
 const {personalDetails, identification, health, character, whsSpecific} = data;
 
-//window.scrollTo(0, document.body.scrollHeight);
-
 //Click Apply Now
 if (window.location.href.includes('Application/Create.aspx?CountryId=' + data.countryId)) {
     const applyNowButton = $('#ContentPlaceHolder1_applyNowButton');
@@ -121,27 +119,6 @@ $('#ContentPlaceHolder1_offshoreDetails_beenToNzDropDownList').val(whsSpecific.b
 $('#ContentPlaceHolder1_offshoreDetails_requirementsQuestions_sufficientFundsOnwardTicketDropDownList').val(whsSpecific.sufficientFundsOnwardTicket).trigger('change');
 $('#ContentPlaceHolder1_offshoreDetails_requirementsQuestions_readRequirementsDropDownList').val(whsSpecific.readRequirements).trigger('change');
 
-
-const validateButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_validateButton');
-const nextImageButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_nextImageButton');
-
-// Click Next
-nextImageButton.click();
-// Button Save available when input last page.
-if (!nextImageButton.length) {
-    //Click Save
-    validateButton.click();
-}
-// Button Submit available when click Save.
-if (!validateButton.length) {
-    // Click Confirm Submit
-    $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_submitImageButton').click();
-    const submitSuperLink = $('#ContentPlaceHolder1_wizardPageHeader_submitSuperLink');
-    if (submitSuperLink.length) {
-        submitSuperLink[0].click();
-    }
-}
-
 //Check Confirm Submit
 $('#ContentPlaceHolder1_falseStatementCheckBox').prop('checked', true);
 $('#ContentPlaceHolder1_notesCheckBox').prop('checked', true);
@@ -155,22 +132,52 @@ $('#ContentPlaceHolder1_entitlementCheckbox').prop('checked', true);
 $('#ContentPlaceHolder1_permitExpiryCheckBox').prop('checked', true);
 $('#ContentPlaceHolder1_medicalInsuranceCheckBox').prop('checked', true);
 
-//Click Submit
-$('#ContentPlaceHolder1_submitImageButton').click();
+$('#ClientScrollHeight').val(document.body.scrollHeight - 0.3 * document.body.scrollHeight);
 
-//Click Pay Now
-const payAnchor = $('#ContentPlaceHolder1_payAnchor');
-if (payAnchor.length) {
-    payAnchor[0].click();
-}
-const payAnchor2 = $('#ContentPlaceHolder1_onlinePaymentAnchor2');
-if (payAnchor2.length) {
-    payAnchor2[0].click();
-}
+window.scrollTo(0, document.body.scrollHeight);
 
-//Fill Payer Name
-$('#_ctl0_ContentPlaceHolder1_payerNameTextBox').val('LE HONG QUYEN');
+setTimeout(() => {
+    const clientScrollHeight = $('#ClientScrollHeight').val();
+    console.log('clientScrollHeight', clientScrollHeight);
+    localStorage.setItem(window.location.pathname, clientScrollHeight);
 
-//Click Pay
-$('#_ctl0_ContentPlaceHolder1_okButton').click();
+    const validateButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_validateButton');
+    const nextImageButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_nextImageButton');
+    // Click Next
+    nextImageButton.click();
+    // Button Save available when input last page.
+    if (!nextImageButton.length) {
+        //Click Save
+        validateButton.click();
+    }
+    // Button Submit available when click Save.
+    if (!validateButton.length) {
+        // Click Confirm Submit
+        $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_submitImageButton').click();
+        const submitSuperLink = $('#ContentPlaceHolder1_wizardPageHeader_submitSuperLink');
+        if (submitSuperLink.length) {
+            submitSuperLink[0].click();
+        }
+    }
+
+    //Click Submit
+    $('#ContentPlaceHolder1_submitImageButton').click();
+
+    //Click Pay Now
+    const payAnchor = $('#ContentPlaceHolder1_payAnchor');
+    if (payAnchor.length) {
+        payAnchor[0].click();
+    }
+    const payAnchor2 = $('#ContentPlaceHolder1_onlinePaymentAnchor2');
+    if (payAnchor2.length) {
+        payAnchor2[0].click();
+    }
+
+    //Fill Payer Name
+    $('#_ctl0_ContentPlaceHolder1_payerNameTextBox').val('LE HONG QUYEN');
+
+    //Click Pay
+    $('#_ctl0_ContentPlaceHolder1_okButton').click();
+
+}, 200);
 

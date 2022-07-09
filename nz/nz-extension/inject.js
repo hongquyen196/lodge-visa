@@ -5,7 +5,6 @@ const data = {
     personalDetails: {
         familyName: 'Le',
         givenName: 'Hong Quang',
-        preferredTitle: 1,
         gender: 'M',
         dateOfBirth: '6 June, 1996',
         countryOfBirth: 188, //237,
@@ -65,7 +64,6 @@ if (window.location.href.includes('Application/Create.aspx?CountryId=' + data.co
 //Fill personalDetails
 $('#ContentPlaceHolder1_personDetails_familyNameTextBox').val(personalDetails.familyName);
 $('#ContentPlaceHolder1_personDetails_givenName1Textbox').val(personalDetails.givenName);
-$('#ContentPlaceHolder1_personDetails_titleDropDownList').val(personalDetails.preferredTitle).trigger('change');
 $('#ContentPlaceHolder1_personDetails_genderDropDownList').val(personalDetails.gender).trigger('change');
 $('#ContentPlaceHolder1_personDetails_dateOfBirthDatePicker_DatePicker').val(personalDetails.dateOfBirth).trigger('change');
 $('#ContentPlaceHolder1_personDetails_CountryDropDownList').val(personalDetails.countryOfBirth).trigger('change');

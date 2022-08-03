@@ -43,23 +43,81 @@ const data = {
         beenToNz: 'No',
         sufficientFundsOnwardTicket: 'Yes',
         readRequirements: 'Yes'
-    }
+    },
+    cardnumber: '',
+    expirydate: '04/24',
+    cardverificationcode: '',
+    cardholder: 'VO CONG TAI'
 }
+
+const realData = {
+    countryId: 237,
+    personalDetails: {
+        familyName: 'Le',
+        givenName: 'Hong Quyen',
+        gender: 'M',
+        dateOfBirth: '19 June, 1996',
+        countryOfBirth: 237,
+        streetNumber: '56',
+        streetName: 'Hai Trieu',
+        suburb: 'An Dong',
+        city: 'Hue',
+        provinceState: 'Thua Thien Hue',
+        postalCode: 49000,
+        country: 237,
+        phoneNumber: '84 93 9190696',
+        email: 'hongquyen196@gmail.com',
+        representedByAgent: 'No',
+        communicationMethod: 1,
+        hasCreditCard: 'Yes'
+    },
+    identification: {
+        passportNumber: 'K0362113',
+        passportExpiryDate: '4 May, 2032',
+        otherIdentification: 3,
+        otherIssueDate: '2 July, 2021',
+        otherExpiryDate: '19 June, 2036'
+    },
+    health: {
+        yes: 'Yes',
+        no: 'No'
+    },
+    character: {
+        yes: 'Yes',
+        no: 'No'
+    },
+    whsSpecific: {
+        previousWhsPermitVisa: 'No',
+        sufficientFundsHoliday: 'Yes',
+        intendedTravelDate: '10 October, 2022',
+        beenToNz: 'No',
+        sufficientFundsOnwardTicket: 'Yes',
+        readRequirements: 'Yes'
+    },
+    cardnumber: '4665843700754667',
+    expirydate: '09/24',
+    cardverificationcode: '053',
+    cardholder: 'LE HONG QUYEN'
+}
+
+
 const {personalDetails, identification, health, character, whsSpecific} = data;
 
 try {
-    //Click Apply Now
-    if (window.location.href.includes('Application/Create.aspx?CountryId=' + data.countryId)) {
-        const applyNowButton = $('#ContentPlaceHolder1_applyNowButton');
-        if (applyNowButton.length) {
-            applyNowButton.click();
-        } else {
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+    var recaptcha = window.location.pathname.includes("rs-captcha") || $('.g-recaptcha').length;
+    if (!recaptcha) {
+        //Click Apply Now
+        if (window.location.href.includes('Application/Create.aspx?CountryId=' + data.countryId)) {
+            const applyNowButton = $('#ContentPlaceHolder1_applyNowButton');
+            if (applyNowButton.length) {
+                applyNowButton.click();
+            } else {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
         }
     }
-
     //Fill personalDetails
     $('#ContentPlaceHolder1_personDetails_familyNameTextBox').val(personalDetails.familyName);
     $('#ContentPlaceHolder1_personDetails_givenName1Textbox').val(personalDetails.givenName);
@@ -137,49 +195,60 @@ try {
 
     window.scrollTo(0, document.body.scrollHeight);
 
-    setTimeout(() => {
-        const clientScrollHeight = $('#ClientScrollHeight').val();
-        console.log('clientScrollHeight', clientScrollHeight);
-        localStorage.setItem(window.location.pathname, clientScrollHeight);
+    if (!recaptcha) {
+        setTimeout(() => {
+            const clientScrollHeight = $('#ClientScrollHeight').val();
+            console.log('clientScrollHeight', clientScrollHeight);
+            localStorage.setItem(window.location.pathname, clientScrollHeight);
 
-        const validateButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_validateButton');
-        const nextImageButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_nextImageButton');
-        // Click Next
-        nextImageButton.click();
-        // Button Save available when input last page.
-        if (!nextImageButton.length) {
-            //Click Save
-            validateButton.click();
-        }
-        // Button Submit available when click Save.
-        if (!validateButton.length) {
-            // Click Confirm Submit
-            $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_submitImageButton').click();
-            const submitSuperLink = $('#ContentPlaceHolder1_wizardPageHeader_submitSuperLink');
-            if (submitSuperLink.length) {
-                submitSuperLink[0].click();
+            const validateButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_validateButton');
+            const nextImageButton = $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_nextImageButton');
+            // Click Next
+            nextImageButton.click();
+            // Button Save available when input last page.
+            if (!nextImageButton.length) {
+                //Click Save
+                validateButton.click();
             }
-        }
+            // Button Submit available when click Save.
+            if (!validateButton.length) {
+                // Click Confirm Submit
+                $('#ContentPlaceHolder1_wizardPageFooter_wizardPageNavigator_submitImageButton').click();
+                const submitSuperLink = $('#ContentPlaceHolder1_wizardPageHeader_submitSuperLink');
+                if (submitSuperLink.length) {
+                    submitSuperLink[0].click();
+                }
+            }
 
-        //Click Submit
-        $('#ContentPlaceHolder1_submitImageButton').click();
+            //Click Submit
+            $('#ContentPlaceHolder1_submitImageButton').click();
 
-        //Click Pay Now
-        const payAnchor = $('#ContentPlaceHolder1_payAnchor');
-        if (payAnchor.length) {
-            payAnchor[0].click();
-        }
-        const payAnchor2 = $('#ContentPlaceHolder1_onlinePaymentAnchor2');
-        if (payAnchor2.length) {
-            payAnchor2[0].click();
-        }
+            //Click Pay Now
+            const payAnchor = $('#ContentPlaceHolder1_payAnchor');
+            if (payAnchor.length) {
+                payAnchor[0].click();
+            }
+            const payAnchor2 = $('#ContentPlaceHolder1_onlinePaymentAnchor2');
+            if (payAnchor2.length) {
+                payAnchor2[0].click();
+            }
 
-        //Fill Payer Name
-        $('#_ctl0_ContentPlaceHolder1_payerNameTextBox').val('LE HONG QUYEN');
+            //Fill Payer Name
+            $('#_ctl0_ContentPlaceHolder1_payerNameTextBox').val(data.cardholder);
 
-        //Click Pay
-        $('#_ctl0_ContentPlaceHolder1_okButton').click();
+            //Click Pay
+            $('#_ctl0_ContentPlaceHolder1_okButton').click();
 
-    }, 200);
+        }, 200);
+    }
+
+    if (window.location.href.includes("webcomm.paymark.co.nz")) {
+        $('#cardnumber').val(data.cardnumber);
+        $('#expirydate').val(data.expirydate);
+        $('#cardverificationcode').val(data.cardverificationcode);
+        $('#cardholder').val(data.cardholder);
+        $('.payment-button').click();
+    }
+
 } catch (e) {
 }

@@ -2,9 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="com.aus.aus" target="11" />
-      <module name="com.aus.aus.main" target="11" />
-      <module name="com.aus.aus.test" target="11" />
+      <module name="aus-automation" target="11" />
+      <module name="aus-automation.main" target="11" />
+      <module name="aus-automation.test" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

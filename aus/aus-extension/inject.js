@@ -1,79 +1,113 @@
 console.log('injected file.');
-const data = {
-    passportDetails: {
-        familyName: 'Leaa',
-        givenName: 'Hong Qaauang',
-        sex: 'F',
-        dateOfBirth: '1996-06-19',
-        passportNumber: 'K0000000E',
-        countryOfPassport: 'VNM', //VNM
-        countryOfBirth: 237,
-        streetNumber: '24,57',
-        streetName: 'An Hai Trieu',
-        suburb: 'An Dong',
-        city: 'Hue',
-        provinceState: 'Thua Thien Hue',
-        postalCode: 49128,
-        country: 237,
-        phoneNumber: '84 93 9190697',
-        email: 'lgqgq@gmail.com',
-        representedByAgent: 'No',
-        communicationMethod: 1,
-        hasCreditCard: 'Yes'
-    },
-    identification: {
-        passportNumber: 'A2096457',
-        passportExpiryDate: '4 May, 2030',
-        otherIdentification: 3,
-        otherIssueDate: '2 July, 2021',
-        otherExpiryDate: '6 June, 2036'
-    },
-    health: {
-        yes: 'Yes',
-        no: 'No'
-    },
-    character: {
-        yes: 'Yes',
-        no: 'No'
-    },
-    whsSpecific: {
-        previousWhsPermitVisa: 'No',
-        sufficientFundsHoliday: 'Yes',
-        intendedTravelDate: '1 October, 2022',
-        beenToNz: 'No',
-        sufficientFundsOnwardTicket: 'Yes',
-        readRequirements: 'Yes'
+class Form {
+
+    getElementByText = (tag, text) => {
+        try {
+            return document.evaluate('//' + tag + '[text()="' + text + '"]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+                .singleNodeValue;
+        } catch (e) {
+            return null;
+        }
+    }
+    /**
+     * Get attribute value
+     * @param tag
+     * @param text
+     * @param tagAttribute
+     * @returns {*}
+     */
+    getAttribute = (tag, text, tagAttribute = 'for') => {
+        return this.getElementByText(tag, text)?.getAttribute(tagAttribute);
+    }
+
+    /**
+     * Set date
+     * @param label
+     * @param date1 02 Oct 1999
+     * @param data2 1999-10-02
+     */
+    setDate = (label, date1, data2) => {
+        const dateOfBirth = this.getAttribute('label', label);
+        $('#' + dateOfBirth)
+            .val(date1);
+        dateOfBirth && $('#' + dateOfBirth.replace('_input', ''))
+            .attr('data-wc-value', data2)
+    }
+
+    /**
+     * Set radio
+     * @param span
+     * @param value Yes: 1, No: 2
+     */
+    setRadio = (span, value) => {
+        const element = $('[name=' + this.getAttribute('span', span,
+            'data-wc-for') + '][value=' + value + ']');
+        element.prop('checked', true);
+        element.trigger( 'click');
+        return element;
+    }
+
+    /**
+     * Select option
+     * @param span
+     * @param value VN26
+     */
+    selectOption = (value) => {
+        const element = $('option[value=' + value + ']');
+        element.prop('selected', true);
+        return element;
+    }
+
+    /**
+     * Set input, select
+     * @param label
+     * @param value
+     */
+    setInput = (label, value) => {
+        let element = $('#' + this.getAttribute('label', label));
+        element.val(value);
+        return element;
+    }
+
+    /**
+     * Click Next
+     */
+    clickNext = () => {
+        const button = $('button[title="Go to next page"]');
+        button?.click();
+        return button;
+    }
+
+    /**
+     * Click Add
+     */
+    clickAdd = () => {
+        const button = this.getElementByText('button', 'Add');
+        button?.click();
+        return button;
+        // $('button[aria-label="Add an entry to the list"]')?.click();
+    }
+
+    /**
+     * Click Confirm
+     */
+    clickConfirm = () => {
+        const button = this.getElementByText('button', 'Confirm')
+        button?.click();
+        return button;
+        // $('button[title="Save the current entry"]')?.click();
+    }
+
+    /**
+     *
+     * @param func
+     * @returns {Promise<unknown>}
+     */
+    setPromise = (func, timeout = 1000) => {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(func);
+            }, timeout);
+        });
     }
 }
-const {passportDetails, identification, health, character, whsSpecific} = data;
-
-
-const getElementByText = (tag, text) => {
-    return $(tag + ':contains("' + text + '")').filter(function () {
-        return $(this).text().trim() === text.trim();
-    })
-}
-
-try {
-    const familyName = getElementByText('label', 'Family name').attr('for');
-    const givenName = getElementByText('label', 'Given names').attr('for');
-    const sex = getElementByText('span', 'Sex').attr('data-wc-for');
-    const dateOfBirth = getElementByText('label', 'Date of birth').attr('for');
-    const dateOfBirth_ = dateOfBirth.replace('_input', '');
-    const passportNumber = getElementByText('label', 'Passport number').attr('for');
-    const countryOfPassport = getElementByText('label', 'Country of passport').attr('for');
-    const countryOfPassport_ = countryOfPassport.replace('_input', '');
-    const nationalityOfPassport = getElementByText('label', 'Nationality of passport holder').attr('for');
-} catch (e) {
-}
-
-$('input#' + familyName).val(passportDetails.familyName);
-$('input#' + givenName).val(passportDetails.givenName);
-$('input[name="' + sex + '"][value=' + passportDetails.sex + ']').prop("checked", true);
-$('input#' + dateOfBirth).val(passportDetails.dateOfBirth);
-$('input#' + dateOfBirth_).attr('data-wc-value', passportDetails.dateOfBirth);
-$('input#' + passportNumber).val(passportDetails.passportNumber);
-$('select#' + countryOfPassport).val(passportDetails.countryOfPassport);
-$('select#' + countryOfPassport_).val(passportDetails.countryOfPassport);
-$('select#' + nationalityOfPassport).val(passportDetails.countryOfPassport);
-

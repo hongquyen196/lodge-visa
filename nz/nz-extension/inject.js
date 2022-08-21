@@ -1,56 +1,6 @@
 console.log('injected file.');
 
 const data = {
-    countryId: 188, //237,
-    personalDetails: {
-        familyName: 'Smith',
-        givenName: 'John',
-        gender: 'M',
-        dateOfBirth: '6 June, 2000',
-        countryOfBirth: 188, //237,
-        streetNumber: '24',
-        streetName: 'Barca',
-        suburb: 'Barca',
-        city: 'Barca',
-        provinceState: 'Barca',
-        postalCode: 49000,
-        country: 188, //237,
-        phoneNumber: '99 45 4544455',
-        email: 'ewfewrer2d@gmail.com',
-        representedByAgent: 'No',
-        communicationMethod: 1,
-        hasCreditCard: 'Yes'
-    },
-    identification: {
-        passportNumber: 'A2096457',
-        passportExpiryDate: '4 May, 2030',
-        otherIdentification: 3,
-        otherIssueDate: '2 July, 2020',
-        otherExpiryDate: '6 June, 2036'
-    },
-    health: {
-        yes: 'Yes',
-        no: 'No'
-    },
-    character: {
-        yes: 'Yes',
-        no: 'No'
-    },
-    whsSpecific: {
-        previousWhsPermitVisa: 'No',
-        sufficientFundsHoliday: 'Yes',
-        intendedTravelDate: '12 October, 2022',
-        beenToNz: 'No',
-        sufficientFundsOnwardTicket: 'Yes',
-        readRequirements: 'Yes'
-    },
-    cardnumber: '',
-    expirydate: '04/24',
-    cardverificationcode: '',
-    cardholder: 'VO CONG TAI'
-}
-
-const realData = {
     countryId: 237,
     personalDetails: {
         familyName: 'Le',

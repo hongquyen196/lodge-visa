@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="GENERAL_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/vendor/vierbergenlars/php-semver" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/clue/socket-raw" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nesk/puphpeteer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nesk/rialto" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/process" />
+    </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

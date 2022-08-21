@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.aus'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.bonigarcia:webdrivermanager:5.1.1'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.1.4'
+}

@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/aus-extension.iml" filepath="$PROJECT_DIR$/aus-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/lodge-visa.iml" filepath="$PROJECT_DIR$/lodge-visa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/notification.iml" filepath="$PROJECT_DIR$/notification.iml" />
       <module fileurl="file://$PROJECT_DIR$/nz-extension.iml" filepath="$PROJECT_DIR$/nz-extension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src.iml" filepath="$PROJECT_DIR$/src.iml" />
     </modules>
   </component>
 </project>

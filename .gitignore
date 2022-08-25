@@ -25,7 +25,8 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-/cookies.json
+node_modules/
+*cookies.json
 
 ### NetBeans ###
 /nbproject/private/
@@ -36,5 +37,3 @@ out/
 
 ### VS Code ###
 .vscode/
-/nz/nz-notification/node_modules/
-/nz/nz-notification/cookies.json

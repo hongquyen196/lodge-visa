@@ -24,7 +24,10 @@ const login = async (page) => {
 
 const checkStatus = async () => {
     console.log('NEWZEALAND', new Date().toISOString());
-    const browser = await puppeteer.launch({headless: true});
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: true
+    });
     const page = await browser.newPage();
     await page.setViewport({width: 1366, height: 768});
     await page.setExtraHTTPHeaders({

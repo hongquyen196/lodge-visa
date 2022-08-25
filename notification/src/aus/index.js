@@ -13,7 +13,10 @@ const TELEGRAM_URL = 'https://api.telegram.org/bot5778841539:AAEB7OTIc4iXJWd9mX-
 
 const checkStatus = async () => {
     console.log('AUSTRALIA', new Date().toISOString());
-    const browser = await puppeteer.launch({headless: true});
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: true
+    });
     const page = await browser.newPage();
     await page.setViewport({width: 1366, height: 768});
     await page.setExtraHTTPHeaders({

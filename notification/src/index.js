@@ -1,7 +1,23 @@
-const nz = require('./nz');
-const aus = require('./aus');
+const puppeteer = require("puppeteer");
+const Australia = require('./aus');
+const NewZealand = require("./nz");
 
-(async () => {
-    await nz.checkStatus();
-    await aus.checkStatus();
+(async() => {
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--start-maximized'],
+        defaultViewport: null
+    });
+    const nz = new NewZealand();
+    const aus = new Australia();
+    await Promise.all([
+        nz.init(browser),
+        aus.init(browser)
+    ]);
+    await Promise.all([
+        nz.status(),
+        aus.status(),
+        // aus.tryLodgeVisa(browser)
+    ]);
+    await browser.close();
 })();

@@ -39,7 +39,7 @@ const data = {
     whsSpecific: {
         previousWhsPermitVisa: 'No',
         sufficientFundsHoliday: 'Yes',
-        intendedTravelDate: '10 October, 2022',
+        intendedTravelDate: '10 December, 2022',
         beenToNz: 'No',
         sufficientFundsOnwardTicket: 'Yes',
         readRequirements: 'Yes'

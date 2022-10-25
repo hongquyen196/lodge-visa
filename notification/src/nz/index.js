@@ -2,7 +2,7 @@ const common = require('../../lib');
 
 const IMMI_HOST = 'onlineservices.immigration.govt.nz';
 const IMMIGRATION_URL = 'https://onlineservices.immigration.govt.nz';
-const USERNAME = 'lhq196';
+const USERNAME = 'hongquyen196';
 const PASSWORD = 'QQQ!@#3214Le';
 const COUNTRY_ID = '237';
 const TIMEOUT = 10;

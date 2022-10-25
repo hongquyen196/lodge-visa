@@ -8,20 +8,27 @@ const COUNTRY_ID = '237';
 const TIMEOUT = 10;
 
 const TELEGRAM_ID = '5507130023';
-const TELEGRAM_URL = 'https://api.telegram.org/bot5500795753:AAHhd62CpNxfYAo9YjQA09lyGFtZCw8Pquo/sendMessage?chat_id=' + TELEGRAM_ID + '&text=WorkingHoliday_APPLY_NOW';
+const TELEGRAM_URL = 'https://api.telegram.org/bot5500795753:AAHhd62CpNxfYAo9YjQA09lyGFtZCw8Pquo/sendMessage?chat_id=' + TELEGRAM_ID + '&text=';
+
+const PAYMENT = {
+    CARD_HOLDER: 'LE HONG QUYEN',
+    CARD_NUMBER: '4665843700754667',
+    EXPIRY_DATE: '09/24',
+    CARD_VERIFICATION_CODE: '053',
+}
 
 class NewZealand {
 
     name = 'NEW ZEALAND';
     page;
 
-    constructor() {}
+    constructor() { }
 
-    init = async(browser) => {
+    init = async (browser) => {
         this.page = await common.newPage(browser, IMMI_HOST);
     }
 
-    login = async(username, password) => {
+    login = async (username, password) => {
         try {
             await this.page.goto(IMMIGRATION_URL);
             await this.page.waitForSelector('input[name="username"]');
@@ -37,14 +44,14 @@ class NewZealand {
         }
     }
 
-    status = async(retry = true) => {
+    status = async (retry = true) => {
         try {
             await Promise.all([
                 this.page.goto(IMMIGRATION_URL + '/WorkingHoliday/Application/Create.aspx?CountryId=' + COUNTRY_ID + '&OffShore=1&STZ=0', { timeout: TIMEOUT * 1000 }),
                 this.page.waitForSelector('#ContentPlaceHolder1_applyNowButton', { timeout: TIMEOUT * 1000 })
             ]);
             console.log(this.name, new Date().toISOString(), 'YES');
-            await common.telegramNotification(TELEGRAM_URL);
+            await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
         } catch (e) {
             const url = await this.page.url();
             if (url.includes('access-denied') && retry) {
@@ -54,6 +61,59 @@ class NewZealand {
                 await this.status(false);
             } else {
                 console.log(this.name, new Date().toISOString(), 'NO');
+            }
+        }
+    }
+
+    tryPayVisa = async (retry = true) => {
+        try {
+            await Promise.all([
+                this.page.goto(IMMIGRATION_URL + '/WorkingHoliday/default.aspx', { timeout: TIMEOUT * 1000 }),
+                this.page.waitForSelector('#ContentPlaceHolder1_applicationList_applicationsDataGrid_payHyperLink_0', { timeout: TIMEOUT * 1000 })
+            ]);
+            await this.page.click('#ContentPlaceHolder1_applicationList_applicationsDataGrid_payHyperLink_0');
+
+            console.log(this.name, new Date().toISOString(), 'CLICK PAYMENT SITE');
+            await this.page.waitForSelector('#ContentPlaceHolder1_onlinePaymentAnchor2', { timeout: TIMEOUT * 1000 });
+            await this.page.click('#ContentPlaceHolder1_onlinePaymentAnchor2');
+
+            console.log(this.name, new Date().toISOString(), 'TYPE PAYMENT NAME');
+            await this.page.waitForSelector('#_ctl0_ContentPlaceHolder1_payerNameTextBox', { timeout: TIMEOUT * 1000 });
+            await this.page.type('#_ctl0_ContentPlaceHolder1_payerNameTextBox', PAYMENT.CARD_HOLDER);
+
+            console.log(this.name, new Date().toISOString(), 'CLICK PAY');
+            await this.page.waitForSelector('#_ctl0_ContentPlaceHolder1_okButton', { timeout: TIMEOUT * 1000 });
+            await this.page.click('#_ctl0_ContentPlaceHolder1_okButton');
+
+            // REOPEN CHECK
+            await Promise.all([
+                this.page.waitForSelector('#cardnumber', { timeout: TIMEOUT * 1000 }),
+                this.page.waitForSelector('#expirydate', { timeout: TIMEOUT * 1000 }),
+                this.page.waitForSelector('#cardverificationcode', { timeout: TIMEOUT * 1000 }),
+                this.page.waitForSelector('#cardholder', { timeout: TIMEOUT * 1000 }),
+                this.page.waitForSelector('.payment-button', { timeout: TIMEOUT * 1000 })
+            ]);
+            console.log(this.name, new Date().toISOString(), 'CAN PAY NOW !!');
+            await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_PAY_NOW');
+
+            console.log(this.name, new Date().toISOString(), 'CLICK PAY NOW !!');
+            await this.page.click('.payment-button');
+
+            //SPAM MESSAGE
+            for (let index = 0; index < 100; index++) {
+                await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_PAY_NOW');
+                await this.page.waitForTimeout(3000);
+            }
+
+        } catch (e) {
+            const url = await this.page.url();
+            if ((url.includes('access-denied') || url.includes('error')) && retry) {
+                console.log(this.name, new Date().toISOString(), 'RELOGIN');
+                const cookies = await this.login(USERNAME, PASSWORD);
+                await common.writeCookies(IMMI_HOST, cookies);
+                await this.tryPayVisa(false);
+            } else {
+                console.log(this.name, new Date().toISOString(), 'CANNOT PAY');
             }
         }
     }

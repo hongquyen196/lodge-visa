@@ -54,10 +54,14 @@ const data = {
 const {personalDetails, identification, health, character, whsSpecific} = data;
 
 try {
+    if (window.location.href.includes('Registration/ForceLogout.aspx') || document.body.getInnerHTML().includes('Please try again later.')) {
+        window.location.href = 'https://onlineservices.immigration.govt.nz/WorkingHoliday/default.aspx';
+    }
     var recaptcha = window.location.pathname.includes("rs-captcha") || $('.g-recaptcha').length;
     if (!recaptcha) {
         //Click Apply Now
-        if (window.location.href.includes('Application/Create.aspx?CountryId=' + data.countryId)) {
+        if (window.location.href.includes('Application/Create.aspx?CountryId=' + data.countryId) ||
+            window.location.href.includes('PaymentGateway/OnLinePayment.aspx')) {
             const applyNowButton = $('#ContentPlaceHolder1_applyNowButton');
             if (applyNowButton.length) {
                 applyNowButton.click();
@@ -178,10 +182,15 @@ try {
             if (payAnchor.length) {
                 payAnchor[0].click();
             }
+            const payHyperLink = $('#ContentPlaceHolder1_applicationList_applicationsDataGrid_payHyperLink_0');
+            if (payHyperLink.length) {
+                payHyperLink[0].click();
+            }
             const payAnchor2 = $('#ContentPlaceHolder1_onlinePaymentAnchor2');
             if (payAnchor2.length) {
                 payAnchor2[0].click();
             }
+
 
             //Fill Payer Name
             $('#_ctl0_ContentPlaceHolder1_payerNameTextBox').val(data.cardholder);

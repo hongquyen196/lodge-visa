@@ -17,7 +17,8 @@
     {
       "matches": [
         "https://onlineservices.immigration.govt.nz/*",
-        "https://webcomm.paymark.co.nz/*"
+        "https://webcomm.paymark.co.nz/*",
+        "https://www.immigration.govt.nz/*"
       ],
       "js": [
         "content.js"
@@ -32,7 +33,8 @@
       ],
       "matches": [
         "https://onlineservices.immigration.govt.nz/*",
-        "https://webcomm.paymark.co.nz/*"
+        "https://webcomm.paymark.co.nz/*",
+        "https://www.immigration.govt.nz/*"
       ],
       "use_dynamic_url": true
     }

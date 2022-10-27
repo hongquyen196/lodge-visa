@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-// const Australia = require('./aus');
+const Australia = require('./aus');
 const NewZealand = require('./nz');
 
 (async () => {
@@ -9,15 +9,15 @@ const NewZealand = require('./nz');
         defaultViewport: null
     });
     const nz = new NewZealand();
-    // const aus = new Australia();
+    const aus = new Australia();
     await Promise.all([
         nz.init(browser),
-        // aus.init(browser)
+        aus.init(browser)
     ]);
     await Promise.all([
-        // nz.status(),
+        nz.status(),
         nz.tryPayVisa(),
-        // aus.status(),
+        aus.status(),
         // aus.tryLodgeVisa(browser),
     ]);
     await browser.close();

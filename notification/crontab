@@ -1,0 +1,1 @@
+*/1 * * * * /var/www/html/lodge-visa/notification/run.sh >> /var/www/html/lodge-visa/notification/log.txt 2>&1

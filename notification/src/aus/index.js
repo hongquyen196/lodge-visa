@@ -87,9 +87,17 @@ class Australia {
                 await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
                 return;
             }
+            // REOPEN CHECK AT PAGE 5 
             await this.page.waitForXPath('//span[text()="5/16"]', { timeout: TIMEOUT * 1000 });
-            await common.telegramNotification(TELEGRAM_URL + 'PAGE 5 NOW !!');
-            console.log(this.name, new Date().toISOString(), 'PAGE 5 SUCCESS !!');
+            console.log(this.name, new Date().toISOString(), 'CAN APPLY NOW !!');
+            //Notification to Tegegram
+            await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
+
+            //Spam notification to Tegegram
+            for (let index = 0; index < 100; index++) {
+                await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
+                await this.page.waitForTimeout(3000);
+            }
         } catch (e) {
             const url = await this.page.url();
             if (url.includes('/lusc/login')) {

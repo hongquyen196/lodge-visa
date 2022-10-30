@@ -90,6 +90,7 @@ class Australia {
             // REOPEN CHECK AT PAGE 5 
             await this.page.waitForXPath('//span[text()="5/16"]', { timeout: TIMEOUT * 1000 });
             console.log(this.name, new Date().toISOString(), 'CAN APPLY NOW !!');
+
             //Notification to Tegegram
             await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
 

@@ -87,8 +87,8 @@ class NewZealand {
 
             // REOPEN CHECK AT PAGE PAYMENT 
             await this.page.waitForSelector('#cardnumber', { timeout: TIMEOUT * 1000 });
-            
             console.log(this.name, new Date().toISOString(), 'CAN PAY NOW !!');
+
             //Notification to Tegegram
             await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_PAY_NOW');
 

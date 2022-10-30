@@ -4,7 +4,7 @@ const NewZealand = require('./nz');
 
 (async () => {
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--start-maximized'],
         defaultViewport: null
     });
@@ -15,10 +15,10 @@ const NewZealand = require('./nz');
         aus.init(browser)
     ]);
     await Promise.all([
-        nz.status(),
+        // nz.status(),
         nz.tryPayVisa(),
-        aus.status(),
-        // aus.tryLodgeVisa(browser),
+        // aus.status(),
+        aus.tryLodgeVisa(browser),
     ]);
     await browser.close();
 })();

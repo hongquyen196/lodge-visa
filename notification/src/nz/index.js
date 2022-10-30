@@ -85,21 +85,20 @@ class NewZealand {
             await this.page.waitForSelector('#_ctl0_ContentPlaceHolder1_okButton', { timeout: TIMEOUT * 1000 });
             await this.page.click('#_ctl0_ContentPlaceHolder1_okButton');
 
-            // REOPEN CHECK
-            await Promise.all([
-                this.page.waitForSelector('#cardnumber', { timeout: TIMEOUT * 1000 }),
-                this.page.waitForSelector('#expirydate', { timeout: TIMEOUT * 1000 }),
-                this.page.waitForSelector('#cardverificationcode', { timeout: TIMEOUT * 1000 }),
-                this.page.waitForSelector('#cardholder', { timeout: TIMEOUT * 1000 }),
-                this.page.waitForSelector('.payment-button', { timeout: TIMEOUT * 1000 })
-            ]);
+            // REOPEN CHECK AT PAGE PAYMENT 
+            await this.page.waitForSelector('#cardnumber', { timeout: TIMEOUT * 1000 });
+            
             console.log(this.name, new Date().toISOString(), 'CAN PAY NOW !!');
+            //Notification to Tegegram
             await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_PAY_NOW');
 
-            console.log(this.name, new Date().toISOString(), 'CLICK PAY NOW !!');
+            await this.page.type('#cardnumber', PAYMENT.CARD_NUMBER);
+            await this.page.type('#expirydate', PAYMENT.EXPIRY_DATE);
+            await this.page.type('#cardverificationcode', PAYMENT.CARD_VERIFICATION_CODE);
+            await this.page.type('#cardholder', PAYMENT.CARD_HOLDER);
             await this.page.click('.payment-button');
-
-            //SPAM MESSAGE
+            
+            //Spam notification to Tegegram
             for (let index = 0; index < 100; index++) {
                 await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_PAY_NOW');
                 await this.page.waitForTimeout(3000);
@@ -114,6 +113,7 @@ class NewZealand {
                 await this.tryPayVisa(false);
             } else {
                 console.log(this.name, new Date().toISOString(), 'CANNOT PAY');
+                await this.page.screenshot({ path: `screenshots/nz_screenshot.jpeg` });
             }
         }
     }

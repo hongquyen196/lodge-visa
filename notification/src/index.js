@@ -10,15 +10,21 @@ const NewZealand = require('./nz');
     });
     const nz = new NewZealand();
     const aus = new Australia();
-    await Promise.all([
-        nz.init(browser),
-        aus.init(browser)
-    ]);
-    await Promise.all([
-        // nz.status(),
-        nz.tryPayVisa(),
-        // aus.status(),
-        aus.tryLodgeVisa(browser),
-    ]);
+    // await Promise.all([
+    //     nz.init(browser),
+    //     aus.init(browser)
+    // ]);
+    // await Promise.all([
+    //     // nz.status(),
+    //     nz.tryPayVisa(),
+    //     // aus.status(),
+    //     aus.tryLodgeVisa(browser),
+    // ]);
+    await nz.init(browser);
+    await nz.tryPayVisa();
+
+    await aus.init(browser);
+    await aus.tryLodgeVisa(browser)
+
     await browser.close();
 })();

@@ -5,7 +5,7 @@ const IMMIGRATION_URL = 'https://onlineservices.immigration.govt.nz';
 const USERNAME = 'hongquyen196';
 const PASSWORD = 'QQQ!@#3214Le';
 const COUNTRY_ID = '237';
-const TIMEOUT = 10;
+const TIMEOUT = 15;
 
 const TELEGRAM_ID = '5507130023';
 const TELEGRAM_URL = 'https://api.telegram.org/bot5500795753:AAHhd62CpNxfYAo9YjQA09lyGFtZCw8Pquo/sendMessage?chat_id=' + TELEGRAM_ID + '&text=';

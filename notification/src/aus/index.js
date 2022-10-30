@@ -8,7 +8,7 @@ const IMMIGRATION_STATUS_URL = 'https://immi.homeaffairs.gov.au/what-we-do/whm-p
 const USERNAME = 'hongquyen196@gmail.com';
 const PASSWORD = 'QQQ!@#3214LeHong';
 const COUNTRY = 'Vietnam';
-const TIMEOUT = 30;
+const TIMEOUT = 15;
 
 const TELEGRAM_ID = '5507130023';
 const TELEGRAM_URL = 'https://api.telegram.org/bot5778841539:AAEB7OTIc4iXJWd9mX-ABUxxyU87yVYkWcA/sendMessage?chat_id=' + TELEGRAM_ID + '&text=';
@@ -55,8 +55,6 @@ class Australia {
             await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
         } catch (e) {
             console.log(this.name, new Date().toISOString(), 'NO');
-            const cookies = await this.page.cookies();
-            await common.writeCookies(IMMI_STATUS_HOST, cookies);
         }
     }
 

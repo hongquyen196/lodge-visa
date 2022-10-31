@@ -24,7 +24,7 @@ const NewZealand = require('./nz');
     await nz.tryPayVisa();
 
     await aus.init(browser);
-    await aus.tryLodgeVisa(browser)
+    await aus.tryLodgeVisa(browser);
 
     await browser.close();
 })();

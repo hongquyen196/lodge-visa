@@ -1,3 +1,4 @@
+const { TimeoutError } = require('puppeteer');
 const common = require('../../lib');
 
 const IMMI_HOST = 'online.immi.gov.au';
@@ -8,7 +9,7 @@ const IMMIGRATION_STATUS_URL = 'https://immi.homeaffairs.gov.au/what-we-do/whm-p
 const USERNAME = 'hongquyen196@gmail.com';
 const PASSWORD = 'QQQ!@#3214LeHong';
 const COUNTRY = 'Vietnam';
-const TIMEOUT = 15;
+const TIMEOUT = 30;
 
 const TELEGRAM_ID = '5507130023';
 const TELEGRAM_URL = 'https://api.telegram.org/bot5778841539:AAEB7OTIc4iXJWd9mX-ABUxxyU87yVYkWcA/sendMessage?chat_id=' + TELEGRAM_ID + '&text=';
@@ -18,6 +19,7 @@ class Australia {
 
     name = 'AUSTRALIA';
     page;
+    retryCount = 1;
 
     constructor() { }
 
@@ -63,9 +65,9 @@ class Australia {
             await this.page.goto(IMMIGRATION_URL + '/ola/app');
             const btnEdit = await this.page.waitForSelector('button[name="defaultActionPanel_0_1"]', { timeout: TIMEOUT * 1000 });
             await btnEdit.click();
+            await this.page.waitForSelector("html");
             console.log(this.name, new Date().toISOString(), 'CLICK EDIT');
             await this.page.waitForFunction(() => location.pathname === '/elp/app');
-            console.log(this.name, new Date().toISOString(), 'CLICK NEXT');
             await this.retry();
         } catch (e) {
             const url = await this.page.url();
@@ -73,20 +75,20 @@ class Australia {
                 console.log(this.name, new Date().toISOString(), 'RELOGIN');
                 const cookies = await this.login(USERNAME, PASSWORD);
                 await common.writeCookies(IMMI_HOST, cookies);
+                await this.tryLodgeVisa();
             }
-            await this.tryLodgeVisa();
         }
     }
 
     retry = async () => {
         try {
-            await this.page.click('button[title="Go to next page"]');
-            const pageName = await this.page.$(".wc-message");
-            if (pageName != null) {
-                console.log(this.name, new Date().toISOString(), 'CANNOT GO TO PAGE 5');
-                await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
-                return;
-            }
+            console.log(this.name, new Date().toISOString(), 'CLICK NEXT');
+            const btnNext = await this.page.waitForSelector('button[title="Go to next page"]');
+            await btnNext.click();
+            await this.page.waitForSelector("html");
+            this.retryCount++;
+            await this.page.waitForXPath('//span[text()="' + this.retryCount + '/16"]', { timeout: TIMEOUT * 1000 });
+
             // REOPEN CHECK AT PAGE 5 
             await this.page.waitForXPath('//span[text()="5/16"]', { timeout: TIMEOUT * 1000 });
             console.log(this.name, new Date().toISOString(), 'CAN APPLY NOW !!');
@@ -100,13 +102,23 @@ class Australia {
                 await this.page.waitForTimeout(3000);
             }
         } catch (e) {
-            const url = await this.page.url();
-            if (url.includes('/lusc/login')) {
-                console.log(this.name, new Date().toISOString(), 'RELOGIN');
-                await this.login(USERNAME, PASSWORD);
-                await this.tryLodgeVisa();
+            if (e instanceof TimeoutError) {
+                const url = await this.page.url();
+                if (url.includes('/lusc/login')) {
+                    console.log(this.name, new Date().toISOString(), 'RELOGIN');
+                    await this.login(USERNAME, PASSWORD);
+                    await this.tryLodgeVisa();
+                } if (url.includes('/elp/app')) {
+                    const pageName = await this.page.$(".wc-message");
+                    if (pageName != null || this.retryCount > 4) {
+                        console.log(this.name, new Date().toISOString(), 'CANNOT GO TO PAGE 5');
+                        await this.page.screenshot({ path: `aus_screenshot.jpeg` });
+                    } else {
+                    await this.retry();
+                    }
+                }
             } else {
-                await this.retry();
+                console.log(e);
             }
         }
     }

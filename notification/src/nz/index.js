@@ -1,3 +1,4 @@
+const { TimeoutError } = require('puppeteer');
 const common = require('../../lib');
 
 const IMMI_HOST = 'onlineservices.immigration.govt.nz';
@@ -5,7 +6,7 @@ const IMMIGRATION_URL = 'https://onlineservices.immigration.govt.nz';
 const USERNAME = 'hongquyen196';
 const PASSWORD = 'QQQ!@#3214Le';
 const COUNTRY_ID = '237';
-const TIMEOUT = 15;
+const TIMEOUT = 30;
 
 const TELEGRAM_ID = '5507130023';
 const TELEGRAM_URL = 'https://api.telegram.org/bot5500795753:AAHhd62CpNxfYAo9YjQA09lyGFtZCw8Pquo/sendMessage?chat_id=' + TELEGRAM_ID + '&text=';
@@ -97,7 +98,7 @@ class NewZealand {
             await this.page.type('#cardverificationcode', PAYMENT.CARD_VERIFICATION_CODE);
             await this.page.type('#cardholder', PAYMENT.CARD_HOLDER);
             await this.page.click('.payment-button');
-            
+
             //Spam notification to Tegegram
             for (let index = 0; index < 100; index++) {
                 await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_PAY_NOW');
@@ -105,15 +106,19 @@ class NewZealand {
             }
 
         } catch (e) {
-            const url = await this.page.url();
-            if ((url.includes('access-denied') || url.includes('error')) && retry) {
-                console.log(this.name, new Date().toISOString(), 'RELOGIN');
-                const cookies = await this.login(USERNAME, PASSWORD);
-                await common.writeCookies(IMMI_HOST, cookies);
-                await this.tryPayVisa(false);
+            if (e instanceof TimeoutError) {
+                const url = await this.page.url();
+                if ((url.includes('access-denied') || url.includes('error')) && retry) {
+                    console.log(this.name, new Date().toISOString(), 'RELOGIN');
+                    const cookies = await this.login(USERNAME, PASSWORD);
+                    await common.writeCookies(IMMI_HOST, cookies);
+                    await this.tryPayVisa(false);
+                } else {
+                    console.log(this.name, new Date().toISOString(), 'CANNOT PAY');
+                    await this.page.screenshot({ path: `nz_screenshot.jpeg` });
+                }
             } else {
-                console.log(this.name, new Date().toISOString(), 'CANNOT PAY');
-                await this.page.screenshot({ path: `screenshots/nz_screenshot.jpeg` });
+                console.log(e);
             }
         }
     }

@@ -70,12 +70,16 @@ class Australia {
             await this.page.waitForFunction(() => location.pathname === '/elp/app');
             await this.retry();
         } catch (e) {
-            const url = await this.page.url();
-            if (url.includes('/lusc/login')) {
-                console.log(this.name, new Date().toISOString(), 'RELOGIN');
-                const cookies = await this.login(USERNAME, PASSWORD);
-                await common.writeCookies(IMMI_HOST, cookies);
+            if (e instanceof TimeoutError) {
+                const url = await this.page.url();
+                if (url.includes('/lusc/login')) {
+                    console.log(this.name, new Date().toISOString(), 'RELOGIN');
+                    const cookies = await this.login(USERNAME, PASSWORD);
+                    await common.writeCookies(IMMI_HOST, cookies);
+                }
                 await this.tryLodgeVisa();
+            } else {
+                console.log(e);
             }
         }
     }
@@ -112,9 +116,9 @@ class Australia {
                     const pageName = await this.page.$(".wc-message");
                     if (pageName != null || this.retryCount > 4) {
                         console.log(this.name, new Date().toISOString(), 'CANNOT GO TO PAGE 5');
-                        await this.page.screenshot({ path: `aus_screenshot.jpeg` });
+                        await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
                     } else {
-                    await this.retry();
+                        await this.retry();
                     }
                 }
             } else {

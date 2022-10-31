@@ -115,7 +115,7 @@ class NewZealand {
                     await this.tryPayVisa(false);
                 } else {
                     console.log(this.name, new Date().toISOString(), 'CANNOT PAY');
-                    await this.page.screenshot({ path: `nz_screenshot.jpeg` });
+                    await this.page.screenshot({ path: `screenshots/nz_screenshot.jpeg` });
                 }
             } else {
                 console.log(e);

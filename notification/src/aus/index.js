@@ -77,7 +77,7 @@ class Australia {
                     const cookies = await this.login(USERNAME, PASSWORD);
                     await common.writeCookies(IMMI_HOST, cookies);
                 }
-                await this.tryLodgeVisa();
+                // await this.tryLodgeVisa();
             } else {
                 console.log(e);
             }

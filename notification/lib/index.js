@@ -24,7 +24,7 @@ const writeCookies = async(hostname, cookies) => {
 const telegramNotification = async(url) => {
     try {
         const response = await fetch(url);
-        console.log(response);
+        //console.log(response);
     } catch (e) {
         console.error('TELEGRAM FAILED');
     }
@@ -42,7 +42,12 @@ const newPage = async(browser, hostname) => {
     return page;
 }
 
+const getCurrentDate = () => {
+   return new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })
+}
+
 exports.readCookies = readCookies;
 exports.writeCookies = writeCookies;
 exports.telegramNotification = telegramNotification;
 exports.newPage = newPage;
+exports.getCurrentDate = getCurrentDate;

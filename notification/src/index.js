@@ -8,7 +8,7 @@ const NewZealand = require('./nz');
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--start-maximized'],
         defaultViewport: null
     });
-    const nz = new NewZealand();
+    //const nz = new NewZealand();
     const aus = new Australia();
     // await Promise.all([
     //     nz.init(browser),
@@ -20,8 +20,8 @@ const NewZealand = require('./nz');
     //     // aus.status(),
     //     aus.tryLodgeVisa(browser),
     // ]);
-    await nz.init(browser);
-    await nz.tryPayVisa();
+    // await nz.init(browser);
+    // await nz.tryPayVisa();
 
     await aus.init(browser);
     await aus.tryLodgeVisa(browser);

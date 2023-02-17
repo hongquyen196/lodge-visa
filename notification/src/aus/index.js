@@ -76,7 +76,7 @@ class Australia {
             if (e instanceof TimeoutError) {
                 const url = await this.page.url();
                 if (url.includes('/lusc/login')) {
-                    console.log(this.name, common.getCurrentDate(), 'RELOGIN ' + USERNAME);
+                    console.log(this.name, common.getCurrentDate(), ' RELOGIN ' + USERNAME);
                     await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' RELOGIN ' + USERNAME);
                     const cookies = await this.login(USERNAME, PASSWORD);
                     await common.writeCookies(IMMI_HOST, cookies);
@@ -85,23 +85,25 @@ class Australia {
             } else {
                 console.log(e);
                 await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + e);
+                await this.tryLodgeVisa();
             }
         }
     }
 
     retry = async () => {
         try {
-            console.log(this.name, common.getCurrentDate(), 'CLICK NEXT PAGE ' + this.retryCount);
+            console.log(this.name, common.getCurrentDate(), ' NEXT PAGE ' + this.retryCount);
             const btnNext = await this.page.waitForSelector('button[title="Go to next page"]');
             await btnNext.click();
-            await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CLICK NEXT PAGE ' + this.retryCount);
+            await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' NEXT PAGE ' + this.retryCount);
             await this.page.waitForSelector("html");
             this.retryCount++;
             await this.page.waitForXPath('//span[text()="' + this.retryCount + '/16"]', { timeout: TIMEOUT * 1000 });
 
             // REOPEN CHECK AT PAGE 5 
             await this.page.waitForXPath('//span[text()="5/16"]', { timeout: TIMEOUT * 1000 });
-            console.log(this.name, common.getCurrentDate(), 'CAN APPLY NOW !!');
+            await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CAN APPLY NOW !!');
+            console.log(this.name, common.getCurrentDate(), ' CAN APPLY NOW !!');
 
             //Notification to Tegegram
             await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
@@ -117,15 +119,21 @@ class Australia {
                 if (url.includes('/elp/app')) {
                     const pageName = await this.page.$(".wc-message"); //If got error it takes a screenshot
                     if (pageName != null) {
-                        console.log(this.name, common.getCurrentDate(), 'CANNOT GO TO PAGE ' + this.retryCount);
-                        await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
-                        await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CANNOT GO TO PAGE ' + this.retryCount);
-                        this.retryCount--;
+                        console.log(this.name, common.getCurrentDate(), ' CANNOT NEXT PAGE ' + this.retryCount);
+                        // GET CURRENT PAGE
+                        // const f = await this.page.$("[class='wc-message']")
+                        // const text = await (await f.getProperty('textContent')).jsonValue()
+                        // console.log(text);
+                        // await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + text);
+                        //await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
+                        //await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CANNOT NEXT PAGE ' + this.retryCount);
+                        this.retryCount = 4;
                         await this.retry();
                     } else {
                         await this.retry();
                     }
                 } else {
+                    this.retryCount = 1;
                     throw e;
                 }
             }

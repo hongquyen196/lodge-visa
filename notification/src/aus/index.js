@@ -6,7 +6,7 @@ const IMMI_STATUS_HOST = 'immi.homeaffairs.gov.au';
 const IMMIGRATION_URL = 'https://online.immi.gov.au';
 const IMMIGRATION_STATUS_URL = 'https://immi.homeaffairs.gov.au/what-we-do/whm-program/status-of-country-caps';
 
-const USERNAME = 'hongquyen196@gmail.com';
+const USERNAME = 'hasmanian196@gmail.com';
 const PASSWORD = 'QQQ!@#3214LeHong';
 const COUNTRY = 'Vietnam';
 const TIMEOUT = 15;
@@ -76,12 +76,12 @@ class Australia {
             if (e instanceof TimeoutError) {
                 const url = await this.page.url();
                 if (url.includes('/lusc/login')) {
-                    console.log(this.name, common.getCurrentDate(), 'RELOGIN');
-                    await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' RELOGIN');
+                    console.log(this.name, common.getCurrentDate(), 'RELOGIN ' + USERNAME);
+                    await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' RELOGIN ' + USERNAME);
                     const cookies = await this.login(USERNAME, PASSWORD);
                     await common.writeCookies(IMMI_HOST, cookies);
                 }
-                // await this.tryLodgeVisa();
+                await this.tryLodgeVisa();
             } else {
                 console.log(e);
                 await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + e);
@@ -118,8 +118,10 @@ class Australia {
                     const pageName = await this.page.$(".wc-message"); //If got error it takes a screenshot
                     if (pageName != null) {
                         console.log(this.name, common.getCurrentDate(), 'CANNOT GO TO PAGE ' + this.retryCount);
-                        await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
+                        //await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
                         await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CANNOT GO TO PAGE ' + this.retryCount);
+                        this.retryCount--;
+                        await this.retry();
                     } else {
                         await this.retry();
                     }

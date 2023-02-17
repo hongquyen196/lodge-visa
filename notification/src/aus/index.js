@@ -118,7 +118,7 @@ class Australia {
                     const pageName = await this.page.$(".wc-message"); //If got error it takes a screenshot
                     if (pageName != null) {
                         console.log(this.name, common.getCurrentDate(), 'CANNOT GO TO PAGE ' + this.retryCount);
-                        //await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
+                        await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
                         await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CANNOT GO TO PAGE ' + this.retryCount);
                         this.retryCount--;
                         await this.retry();

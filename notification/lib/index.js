@@ -1,36 +1,65 @@
 const fetch = require("node-fetch");
-const fs = require('fs').promises;
+const FormData = require('form-data');
+const fs = require('fs');
+const fsp = fs.promises;
 
-const readCookies = async(hostname) => {
+const TELEGRAM_ID = '5507130023';
+const TELEGRAM_URL = 'https://api.telegram.org/bot';
+const TELEGRAM_TOKEN = '5778841539:AAEB7OTIc4iXJWd9mX-ABUxxyU87yVYkWcA';
+const TELEGRAM_DEBUG_TOKEN = '6012885781:AAHCeSUB3KavmfHiqfae-g6-sWPO0moYYfk';
+
+const SEND_MESSAGE = TELEGRAM_URL + TELEGRAM_TOKEN + '/sendMessage?chat_id=' + TELEGRAM_ID;
+const SEND_MESSAGE_DEBUG = TELEGRAM_URL + TELEGRAM_DEBUG_TOKEN + '/sendMessage?chat_id=' + TELEGRAM_ID;
+
+const SEND_PHOTO = TELEGRAM_URL + TELEGRAM_TOKEN + '/sendPhoto?chat_id=' + TELEGRAM_ID;
+const SEND_PHOTO_DEBUG = TELEGRAM_URL + TELEGRAM_DEBUG_TOKEN + '/sendPhoto?chat_id=' + TELEGRAM_ID;
+
+const readCookies = async (hostname) => {
     try {
         const path = './' + hostname + '.cookies.json';
-        const rawdata = await fs.readFile(path);
+        const rawdata = await fsp.readFile(path);
         return JSON.parse(rawdata);
     } catch (e) {
         return [];
     }
 }
 
-const writeCookies = async(hostname, cookies) => {
+const writeCookies = async (hostname, cookies) => {
     try {
         const path = './' + hostname + '.cookies.json';
         const rawdata = JSON.stringify(cookies);
-        return fs.writeFile(path, rawdata);
+        return fsp.writeFile(path, rawdata);
     } catch (e) {
         console.error('WRITE FAILED');
     }
 }
 
-const telegramNotification = async(url) => {
+const telegramSendMessage = async (text, debug = false) => {
     try {
-        const response = await fetch(url);
-        //console.log(response);
+        const response = await fetch((debug ? SEND_MESSAGE_DEBUG : SEND_MESSAGE) + '&text=' + text);
+        console.log(response.status);
     } catch (e) {
-        console.error('TELEGRAM FAILED');
+        console.error('TELEGRAM FAILED', e);
     }
 }
 
-const newPage = async(browser, hostname) => {
+const telegramSendPhoto = async (photo, debug = false) => {
+    try {
+        var formdata = new FormData();
+        formdata.append("photo", fs.createReadStream(photo));
+        var requestOptions = {
+          method: 'POST',
+          body: formdata,
+          redirect: 'follow'
+        };
+        const response = await fetch((debug ? SEND_PHOTO_DEBUG : SEND_PHOTO), requestOptions);
+        console.log(response.status);
+    } catch (e) {
+        console.error('TELEGRAM FAILED', e);
+    }
+}
+
+const newPage = async (browser, hostname) => {
     const page = await browser.newPage();
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8'
@@ -43,11 +72,12 @@ const newPage = async(browser, hostname) => {
 }
 
 const getCurrentDate = () => {
-   return new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })
+    return new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })
 }
 
 exports.readCookies = readCookies;
 exports.writeCookies = writeCookies;
-exports.telegramNotification = telegramNotification;
+exports.telegramSendMessage = telegramSendMessage;
+exports.telegramSendPhoto = telegramSendPhoto;
 exports.newPage = newPage;
 exports.getCurrentDate = getCurrentDate;

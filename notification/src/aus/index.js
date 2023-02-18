@@ -7,14 +7,9 @@ const IMMIGRATION_URL = 'https://online.immi.gov.au';
 const IMMIGRATION_STATUS_URL = 'https://immi.homeaffairs.gov.au/what-we-do/whm-program/status-of-country-caps';
 
 const USERNAME = 'hasmanian196@gmail.com';
-const PASSWORD = 'QQQ!@#3214LeHong';
+const PASSWORD = 'QQQ!@#3214LeHong1';
 const COUNTRY = 'Vietnam';
 const TIMEOUT = 15;
-
-const TELEGRAM_ID = '5507130023';
-const TELEGRAM_URL = 'https://api.telegram.org/bot5778841539:AAEB7OTIc4iXJWd9mX-ABUxxyU87yVYkWcA/sendMessage?chat_id=' + TELEGRAM_ID + '&text=';
-//DEBUG
-const TELEGRAM1_URL = 'https://api.telegram.org/bot6012885781:AAHCeSUB3KavmfHiqfae-g6-sWPO0moYYfk/sendMessage?chat_id=' + TELEGRAM_ID + '&text=';
 
 class Australia {
 
@@ -26,6 +21,7 @@ class Australia {
 
     init = async (browser) => {
         this.page = await common.newPage(browser, IMMI_HOST);
+        await common.telegramSendMessage(common.getCurrentDate() + ' START', true);
     }
 
     login = async (username, password) => {
@@ -44,7 +40,9 @@ class Australia {
             return cookies;
         } catch (e) {
             console.error(this.name, 'LOGIN FAILED');
-            await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' LOGIN FAILED');
+            await common.telegramSendMessage(common.getCurrentDate() + ' LOGIN FAILED', true);
+            await this.page.screenshot({ path: 'screenshots/aus_screenshot.jpeg' });
+            await common.telegramSendPhoto('screenshots/aus_screenshot.jpeg', true);
             return [];
         }
     }
@@ -56,7 +54,7 @@ class Australia {
                 await this.page.waitForXPath('//tr[.//td[text()="' + COUNTRY + '"]]//span[contains(text(),"open")]', { timeout: TIMEOUT * 1000 })
             ]);
             console.log(this.name, common.getCurrentDate(), 'YES');
-            await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
+            await common.telegramSendMessage('WorkingHoliday_APPLY_NOW');
         } catch (e) {
             console.log(this.name, common.getCurrentDate(), 'NO');
         }
@@ -69,7 +67,7 @@ class Australia {
             await btnEdit.click();
             await this.page.waitForSelector("html");
             console.log(this.name, common.getCurrentDate(), 'CLICK EDIT');
-            await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CLICK EDIT');
+            await common.telegramSendMessage(common.getCurrentDate() + ' CLICK EDIT', true);
             await this.page.waitForFunction(() => location.pathname === '/elp/app');
             await this.retry();
         } catch (e) {
@@ -77,14 +75,16 @@ class Australia {
                 const url = await this.page.url();
                 if (url.includes('/lusc/login')) {
                     console.log(this.name, common.getCurrentDate(), ' RELOGIN ' + USERNAME);
-                    await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' RELOGIN ' + USERNAME);
+                    await common.telegramSendMessage(common.getCurrentDate() + ' RELOGIN ' + USERNAME, true);
                     const cookies = await this.login(USERNAME, PASSWORD);
                     await common.writeCookies(IMMI_HOST, cookies);
                 }
                 await this.tryLodgeVisa();
             } else {
                 console.log(e);
-                await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + e);
+                await common.telegramSendMessage(common.getCurrentDate() + e, true);
+                await this.page.screenshot({ path: 'screenshots/aus_screenshot.jpeg' });
+                await common.telegramSendPhoto('screenshots/aus_screenshot.jpeg', true);
                 await this.tryLodgeVisa();
             }
         }
@@ -95,24 +95,25 @@ class Australia {
             console.log(this.name, common.getCurrentDate(), ' NEXT PAGE ' + this.retryCount);
             const btnNext = await this.page.waitForSelector('button[title="Go to next page"]');
             await btnNext.click();
-            await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' NEXT PAGE ' + this.retryCount);
+            await common.telegramSendMessage(common.getCurrentDate() + ' NEXT PAGE ' + this.retryCount, true);
             await this.page.waitForSelector("html");
             this.retryCount++;
             await this.page.waitForXPath('//span[text()="' + this.retryCount + '/16"]', { timeout: TIMEOUT * 1000 });
 
             // REOPEN CHECK AT PAGE 5 
             await this.page.waitForXPath('//span[text()="5/16"]', { timeout: TIMEOUT * 1000 });
-            await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CAN APPLY NOW !!');
+            await common.telegramSendMessage(common.getCurrentDate() + ' WorkingHoliday_APPLY_NOW', true);
             console.log(this.name, common.getCurrentDate(), ' CAN APPLY NOW !!');
 
             //Notification to Tegegram
-            await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
+            await common.telegramSendMessage(common.getCurrentDate() + ' WorkingHoliday_APPLY_NOW');
 
             //Spam notification to Tegegram
             for (let index = 0; index < 100; index++) {
-                await common.telegramNotification(TELEGRAM_URL + 'WorkingHoliday_APPLY_NOW');
+                await common.telegramSendMessage(common.getCurrentDate() + ' WorkingHoliday_APPLY_NOW');
                 await this.page.waitForTimeout(1000);
             }
+            await this.tryLodgeVisa();
         } catch (e) {
             if (e instanceof TimeoutError) {
                 const url = await this.page.url();
@@ -124,9 +125,9 @@ class Australia {
                         // const f = await this.page.$("[class='wc-message']")
                         // const text = await (await f.getProperty('textContent')).jsonValue()
                         // console.log(text);
-                        // await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + text);
-                        //await this.page.screenshot({ path: `screenshots/aus_screenshot.jpeg` });
-                        //await common.telegramNotification(TELEGRAM1_URL + common.getCurrentDate() + ' CANNOT NEXT PAGE ' + this.retryCount);
+                        await this.page.screenshot({ path: 'screenshots/aus_screenshot.jpeg' });
+                        await common.telegramSendPhoto('screenshots/aus_screenshot.jpeg', true);
+                        
                         this.retryCount = 4;
                         await this.retry();
                     } else {

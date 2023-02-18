@@ -9,7 +9,7 @@ const IMMIGRATION_STATUS_URL = 'https://immi.homeaffairs.gov.au/what-we-do/whm-p
 const USERNAME = 'hasmanian196@gmail.com';
 const PASSWORD = 'QQQ!@#3214LeHong1';
 const COUNTRY = 'Vietnam';
-const TIMEOUT = 15;
+const TIMEOUT = 20;
 
 class Australia {
 
@@ -21,7 +21,7 @@ class Australia {
 
     init = async (browser) => {
         this.page = await common.newPage(browser, IMMI_HOST);
-        await common.telegramSendMessage(common.getCurrentDate() + ' START', true);
+        await common.telegramSendMessage(common.getCurrentDate() + ' START');
     }
 
     login = async (username, password) => {

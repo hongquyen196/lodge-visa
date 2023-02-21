@@ -71,17 +71,25 @@ class Australia {
             await this.page.waitForFunction(() => location.pathname === '/elp/app');
             await this.retry();
         } catch (e) {
-            if (e instanceof TimeoutError) {
-                const url = await this.page.url();
-                if (url.includes('/lusc/login')) {
-                    console.log(this.name, common.getCurrentDate(), ' RELOGIN ' + USERNAME);
-                    await common.telegramSendMessage(common.getCurrentDate() + ' RELOGIN ' + USERNAME, true);
-                    const cookies = await this.login(USERNAME, PASSWORD);
-                    await common.writeCookies(IMMI_HOST, cookies);
+            try {
+                if (e instanceof TimeoutError) {
+                    const url = await this.page.url();
+                    if (url.includes('/lusc/login')) {
+                        console.log(this.name, common.getCurrentDate(), ' RELOGIN ' + USERNAME);
+                        await common.telegramSendMessage(common.getCurrentDate() + ' RELOGIN ' + USERNAME, true);
+                        const cookies = await this.login(USERNAME, PASSWORD);
+                        await common.writeCookies(IMMI_HOST, cookies);
+                    }
+                    await this.tryLodgeVisa();
+                } else {
+                    console.log(e);
+                    await common.telegramSendMessage(common.getCurrentDate() + e, true);
+                    await this.page.screenshot({ path: 'screenshots/aus_screenshot.jpeg' });
+                    await common.telegramSendPhoto('screenshots/aus_screenshot.jpeg', true);
+                    await this.tryLodgeVisa();
                 }
+            } catch (e) {
                 await this.tryLodgeVisa();
-            } else {
-                console.log(e);
                 await common.telegramSendMessage(common.getCurrentDate() + e, true);
                 await this.page.screenshot({ path: 'screenshots/aus_screenshot.jpeg' });
                 await common.telegramSendPhoto('screenshots/aus_screenshot.jpeg', true);

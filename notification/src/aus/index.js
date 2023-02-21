@@ -89,7 +89,6 @@ class Australia {
                     await this.tryLodgeVisa();
                 }
             } catch (e) {
-                await this.tryLodgeVisa();
                 await common.telegramSendMessage(common.getCurrentDate() + e, true);
                 await this.page.screenshot({ path: 'screenshots/aus_screenshot.jpeg' });
                 await common.telegramSendPhoto('screenshots/aus_screenshot.jpeg', true);
